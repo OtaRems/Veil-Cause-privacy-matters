@@ -15,7 +15,7 @@
 <body class="h-100 d-flex justify-content-center align-items-center">
 
     <!--Sezione Principale-->
-    <section class="container h-75 secbg rounded-4 shadow-lg p-0">
+    <section id="mainbox" class="container h-75 secbg rounded-4 shadow-lg p-0">
         <div class="row g-0 h-100">
             <!--Colonna di sinistra-->
             <div class="col-5 h-100 p-3">
@@ -33,9 +33,9 @@
                     <p class="text-secondary">Perché la privacy è un diritto umano</p>
                     <!--Username-->
                     <div class="form-floating mb-3 mt-5">
-                        <input type="text" class="form-control" id="UserInput" placeholder="" pattern="^[A-Za-z][A-Za-z0-9]{0,15}$" maxlength="16" required>
+                        <input type="text" class="form-control" id="UserInput" placeholder="" pattern="^[A-Za-z][A-Za-z0-9]{0,19}$" maxlength="20" required>
                         <label for="UserInput">Inserisci un username</label>
-                        <div class="invalid-feedback text-start">Inserisci un username valido!</div>
+                        <div id="userfeed" class="invalid-feedback text-start">Inserisci un username valido!</div>
                     </div>
                     <!-- Password -->
                     <div class="form-floating mb-3 mt-5 position-relative">
@@ -84,14 +84,13 @@
                 else {
                     let user = $("#UserInput").val()
                     let pass = $("#PasswordInput").val()
-                    $("#bottom-text").html('<div class="spinner-border spinner-border-sm text-success" role="status"></div><span> Caricamento</span>')
+                    $("#bottom-text").html('<div class="spinner-border spinner-border-sm text-success" role="status"></div><span> Caricamento..</span>')
                     //primo hash della password, lato client con l'algoritmo Argon2iD
                     let argon = "";
                     let salt = Argon2id.randomSalt();
-                    console.log(salt);
 
                     setTimeout( function() {
-                        Argon2id.hash(pass, salt, 3, 4000, 1, 32).then(hash => {
+                        Argon2id.hash(pass, salt, 3, 4000, 1,    32).then(hash => {
                         argon = hash;
 
                         //invio della coppia user + hash al server
@@ -100,7 +99,14 @@
                         method: "POST",
                         data:  {username:user, pass: argon, salt: salt},
                         success: function (result) {
-                            $("body").html(result)
+                            console.log(result)
+                            if (result == "0") {
+                                $("#mainbox").html("account creato");
+                            } else {
+                                $("#UserInput").val("")
+                                $("#userfeed").html("Esiste già un utente con questo username!")
+                                $("#bottom-text").html('<a class="form-text" href="../login/">Hai già un account? Accedi qui</a>')
+                            }
                         }
                         });
                     });
