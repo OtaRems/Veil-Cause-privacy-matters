@@ -13,8 +13,10 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="h-100 d-flex justify-content-center align-items-center">
+    <!--Sezione principale-->
     <section class="container h-75 secbg rounded-4 shadow-lg p-0">
         <div class="row g-0 h-100">
+            <!--Colonna di sinistra-->
             <div class="col-5 h-100 p-3">
                 <div class="evidbg text-center rounded-2 w-100 h-100 p-5 align-content-center">
                     <p class="mt-4 h2"><strong>
@@ -22,32 +24,38 @@
                     </strong></p>
                 </div>
             </div>
+            <!--colonna di destra-->
             <div class="col-7 h-100 p-5 text-center">
                 <form class="mx-5 needs-validation" novalidate>
                     <img src="../img/Logogreen.png" alt="Ciao" style="width:3rem">
                     <h1>Bentornato in Veil!</h1>
                     <p class="text-secondary">Perché la privacy è un diritto umano</p>
-
+                    <!--Username-->
                     <div class="form-floating mb-3 mt-5">
-                        <input type="text" class="form-control" id="UserInput" placeholder="" pattern="^[A-Za-z][A-Za-z0-9]{0,15}$" maxlength="16" required>
+                        <input type="text" class="form-control" id="UserInput" placeholder="" pattern="^^[A-Za-z][A-Za-z0-9]{0,19}$" maxlength=20" required>
                         <label for="UserInput">Username</label>
                         <div class="invalid-feedback text-start">Inserisci un username valido!</div>
                     </div>
+                    <!--Password-->
                     <div class="form-floating mb-3 mt-5 position-relative">
-                        <input type="password" class="form-control" id="PasswordInput" placeholder="" required pattern="^[^\s]{1,}$">
+                        <input type="password" class="form-control" id="PasswordInput" placeholder="" required>
                         <label for="PasswordInput">Password</label>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 512" class="position-absolute top-0 end-0 translate-middle-y me-3" id="togglePassword" style="cursor: pointer; color:var(--bs-secondary); width: 1.5rem; margin-top:1.9rem;"><path fill="#aeb2b6" d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"/></svg>
                         <div class="invalid-feedback text-start">Inserisci una password valida!</div>
                     </div>
-                    
+                    <!--Submit-->
                     <button type="submit" class="btn btn-primary mt-5 mb-3 w-100 p-3">Autentica</button>
-                    <a class="form-text" href="../register/">Non hai ancora un account? Registrati qui</a>
+                    <div id="bottom-text">
+                        <a class="form-text" href="../register/">Non hai ancora un account? Registrati qui</a>
+                    </div>
                 </form>
             </div>
         </div>
     </section>
     <p class="text-secondary position-absolute start-50 bottom-0 translate-middle"><small>SHA256 checksum: c94a9928b664d36533d2ec38e20633f194699d68b46ab9cf0f4e83a176b4ea18</small></p>
     <script>
+
+        //Mostra/Nascondi password
         $("#togglePassword").click(function() {
             let pinput = $("#PasswordInput");
             let icon = $(this)
@@ -60,11 +68,26 @@
             }
         })
 
+        //submit del form
         $("form").on("submit", function(event) {
+            event.preventDefault();
             if (!this.checkValidity()) {
-                    event.preventDefault();
                     event.stopPropagation();
                 }
+            else {
+                $("#bottom-text").html('<div class="spinner-border spinner-border-sm text-success" role="status"></div><span> Caricamento..</span>')
+                let user = $("#UserInput").val()
+                let pass = $("#PasswordInput").val()
+
+                .ajax({
+                        url: "login.php",
+                        method: "POST",
+                        data:  {username:user},
+                        success: function (result) {
+                            
+                        }
+                        });
+            }
             $(this).addClass("was-validated");
         })
     </script>

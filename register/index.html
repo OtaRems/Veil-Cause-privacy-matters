@@ -48,12 +48,12 @@
                             <small class="text-danger-emphasis" id="f3">Almeno 1 carattere speciale (@!/-)</small>
                         </div>
                     </div>
-
+                    <!--Submit-->
                     <button type="submit" class="btn btn-primary mt-1 mb-3 w-100 p-3">Crea Account</button>
                     <div id="bottom-text">
                         <a class="form-text" href="../login/">Hai già un account? Accedi qui</a>
                     </div>
-                </form>
+                </for   m>
             </div>
         </div>
     </section>
@@ -92,9 +92,8 @@
                     //primo hash della password, lato client con l'algoritmo Argon2iD
                     let argon = "";
                     let salt = Argon2id.randomSalt();
-
                     setTimeout( function() {
-                        Argon2id.hash(pass, salt, 3, 4000, 1,    32).then(hash => {
+                        Argon2id.hash(pass, salt, 3, 4000, 1, 32).then(hash => {
                         argon = hash;
 
                         //invio di user + hash + salt al server
@@ -103,7 +102,6 @@
                         method: "POST",
                         data:  {username:user, pass: argon, salt: salt},
                         success: function (result) {
-                            console.log(result)
                             if (result == "0") {
                                 $("#mainbox").addClass("align-content-center")
                                 $("#mainbox").html('<h3>Il tuo account è stato creato con successo!</h3><p>Ora puoi effettuare il login tramite la pagina apposita</p><a  class="btn btn-primary px-5 mt-3" href="../login/">Login</a>');
@@ -122,6 +120,7 @@
             $(this).addClass("was-validated");
         })
 
+        //Validazione password
         let pinput = $("#PasswordInput")
         const reg0 = /^(?!.*\s).{10,}$/;
         const reg1 = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/;

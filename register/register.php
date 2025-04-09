@@ -5,6 +5,13 @@ $user = $_POST["username"];
 $pass = $_POST["pass"];
 $salt = $_POST["salt"];
 
+$PatternUser = "/^[A-Za-z][A-Za-z0-9]{0,19}$/";
+
+if (!preg_match($PatternUser, $user)) {
+    // Log the error (do not expose details to the client)
+    die("Invalid input");
+}
+
 $smtp = $conn->prepare("SELECT * FROM utenti WHERE username = ?");
 $smtp->bind_param("s", $user);
 $smtp->execute();
