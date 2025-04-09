@@ -53,6 +53,7 @@
         </div>
     </section>
     <p class="text-secondary position-absolute start-50 bottom-0 translate-middle"><small>SHA256 checksum: c94a9928b664d36533d2ec38e20633f194699d68b46ab9cf0f4e83a176b4ea18</small></p>
+    <script src="../js/Argon2id.min.js"></script>
     <script>
 
         //Mostra/Nascondi password
@@ -79,14 +80,28 @@
                 let user = $("#UserInput").val()
                 let pass = $("#PasswordInput").val()
 
-                .ajax({
+                $.ajax({
                         url: "login.php",
                         method: "POST",
                         data:  {username:user},
                         success: function (result) {
-                            
+                            if (result == "USER_NOT_FOUND") {
+                                console.log("None");
+                                return;
+                            }
+                            //hash della password con il salt ricevuto
+                            Argon2id.hash(pass, result, 3, 4000, 1, 32).then(argon => {
+                                $.ajax({
+                                    url: "login.php",
+                                    method: "POST",
+                                    data: {username:user, hashpass:argon},
+                                    success: function(res2) {
+                                        console.log(res2)
+                                    }
+                                })
+                            })
                         }
-                        });
+                })
             }
             $(this).addClass("was-validated");
         })

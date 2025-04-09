@@ -90,11 +90,10 @@
                     let pass = $("#PasswordInput").val()
                     $("#bottom-text").html('<div class="spinner-border spinner-border-sm text-success" role="status"></div><span> Caricamento..</span>')
                     //primo hash della password, lato client con l'algoritmo Argon2iD
-                    let argon = "";
                     let salt = Argon2id.randomSalt();
                     setTimeout( function() {
-                        Argon2id.hash(pass, salt, 3, 4000, 1, 32).then(hash => {
-                        argon = hash;
+                        Argon2id.hash(pass, salt, 3, 4000, 1, 32).then(argon => {
+                        console.log(argon);
 
                         //invio di user + hash + salt al server
                         $.ajax({
