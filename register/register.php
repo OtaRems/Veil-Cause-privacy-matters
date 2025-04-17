@@ -1,5 +1,5 @@
 <?php
-require "../connessione.php";
+require "/funcs/connessione.php";
 
 $user = $_POST["username"];
 $pass = $_POST["pass"];
