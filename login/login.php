@@ -1,5 +1,5 @@
 <?php
-require "/funcs/connessione.php";
+require "../funcs/connessione.php";
 
 // Sicurezza per il cookie di sessione
 session_set_cookie_params([

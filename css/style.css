@@ -11,10 +11,15 @@ body {
 }
 .secbg {
     background-color: var(--bs-secondary-bg);
+    
 }
 
 .evidbg {
     background-color: var(--bs-primary);
+}
+
+.evidtext{
+    color: var(--altrocolore);
 }
 
 .btn-primary {
@@ -35,4 +40,47 @@ body {
     width: 50px;
     height: 4px;
     background-color: white !important;
+}
+
+.list-group-item {
+    background: none;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 1.5rem;
+    border-color: #ffffff1a;
+}
+
+.list-group-item:hover, .roundbtn:hover {
+    filter:brightness(1.5);
+}
+
+#fullblur {
+    backdrop-filter: blur(5px);
+}
+
+.roundbtn {
+    width:3.5rem; 
+    height:3.5rem;
+    font-size: larger;
+    font-weight: bolder;
+    border-radius:50%;
+    border:none;
+    background-color: var(--bs-primary);
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-close:focus {
+    border: none;
+    box-shadow: none !important;
+}
+
+.text-secondary {
+    margin-bottom: 0;
+}
+
+.form-control:focus {
+    box-shadow: none !important;
 }
