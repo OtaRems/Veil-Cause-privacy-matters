@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="../js/app.js"></script>
     <script src="/js/keyderiv.js"></script>
+    <script src="/js/alert.js"></script>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
     <?php
@@ -17,10 +18,20 @@
         avviaSessioneProtetta(15 * 60); // 15 minuti di timeout
     ?>
     <script>
-        const key = keyManager.loadKey();
+        let key
+        $( async () => {
+            if (keyManager.hasKey()) {
+                key = await keyManager.loadKey();
+            }else {
+                location.replace("/funcs/logout.php")
+            }   
+        })
+        
     </script>
 </head>
 <body class="d-flex flex-column" style="height: 100vh;">
+    <div id="toastdiv" class="w-25 position-fixed bottom-0 start-0 p-3 pe-5 z-3">
+    </div>
     <h2 class="py-4 px-5 pb-0"><b>
         <?php
         echo "Bentornato {$_SESSION['username']}!";
@@ -35,12 +46,6 @@
                 <?php require "notes/card.php"?>
             </section>
             <section class="col-3 secbg rounded-5 shadow me-5 p-0 position-relative overflow-hidden h-100">
-                <h4 class='ps-4 pt-4 evidtext'><b>Note</b></h4>
-                <form>
-                    <input type="text" name="titolo" id="titlenota" placeholder='Nuovo Titolo' class="form-control form-control-lg px-4" style="background:none;border:none; font-weight:bolder" maxlength="20">
-                    <textarea name="testo" id="testonota" class="form-control px-4" rows="7" style="background:none;border:none;resize:none" placeholder="Inserisci il testo della tua nota privata..." ></textarea>
-                </form>
-                <button id="addnotebtn" class="roundbtn">+</button>
             </section>
         </div>
     <!-- Second Row -->

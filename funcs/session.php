@@ -27,7 +27,7 @@ function avviaSessioneProtetta($timeoutInSecondi = 900) {
 
     // Controllo se l'utente è loggato
     if (!isset($_SESSION["username"])) {
-        header("Location: ../login/");
+        header("Location: /login/");
         exit();
     }
 }

@@ -4,6 +4,7 @@
     --bs-primary: #005B41 !important;
     --bs-primary-rgb: 0, 91, 65 !important;
     --altrocolore: #008170;
+
 }
 
 body {
@@ -16,6 +17,10 @@ body {
 
 .evidbg {
     background-color: var(--bs-primary);
+}
+
+.accentbg {
+    background-color: var(--bs-body-bg);
 }
 
 .evidtext{
@@ -50,13 +55,19 @@ body {
     border-color: #ffffff1a;
 }
 
-.list-group-item:hover, .roundbtn:hover {
+.list-group-item:hover{
     filter:brightness(1.5);
+}
+
+.roundbtn:hover {
+    filter: brightness(1.5);
+    transform: scale(1.1);
 }
 
 #fullblur {
     backdrop-filter: blur(5px);
 }
+
 
 .roundbtn {
     width:3.5rem; 
@@ -69,7 +80,7 @@ body {
     position: absolute;
     right: 1.5rem;
     bottom: 1.5rem;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease-in-out;
 }
 
 .btn-close:focus {
@@ -81,6 +92,37 @@ body {
     margin-bottom: 0;
 }
 
-.form-control:focus {
+.form-control:focus, .form-select:focus {
     box-shadow: none !important;
+}
+
+.btn-outline-secondary:hover , .btn-outline-secondary:active {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.btn.active {
+    background-color: var(--altrocolore);
+    border-color: var(--altrocolore);
+}
+#testonota:empty::before {
+    content: attr(data-placeholder);
+    color: #888;
+    pointer-events: none;
+}
+
+.notegroup-1 {
+    color: green;
+}
+.notegroup-2 {
+    color: yellow;
+}
+.notegroup-3 {
+    color: orange;
+}
+.notegroup-4 {
+    color: red;
+}
+.notegroup-5 {
+    color: purple;
 }

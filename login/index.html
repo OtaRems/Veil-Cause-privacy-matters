@@ -65,6 +65,8 @@
             let params = new URLSearchParams(location.search);            
             if (params.has("expired", 1)) {
                 $("#alert").html('<div class="alert alert-danger" role="alert">Sessione scaduta per inattività, effettua di nuovo il login!</div>')
+            } else if (params.has("expired", 2)) {
+                $("#alert").html('<div class="alert alert-danger" role="alert">Per motivi di sicurezza devi effettuare di nuovo il login!</div>')
             }
         })
         //Mostra/Nascondi password
