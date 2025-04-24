@@ -43,7 +43,7 @@
         <!-- First Row -->
         <div class="row h-50 mb-4">
             <section class="col-3 secbg rounded-5 shadow me-5 p-0 position-relative overflow-hidden h-100">
-                <?php require "notes/card.php"?>
+                <?php require "notes/card.html"?>
             </section>
             <section class="col-3 secbg rounded-5 shadow me-5 p-0 position-relative overflow-hidden h-100">
             </section>
