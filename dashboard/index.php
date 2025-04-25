@@ -29,10 +29,10 @@
         
     </script>
 </head>
-<body class="d-flex flex-column" style="height: 100vh;">
+<body class="d-flex flex-column" style="min-height: 100vh;">
     <div id="toastdiv" class="w-25 position-fixed bottom-0 start-0 p-3 pe-5 z-3">
     </div>
-    <h2 class="py-4 px-5 pb-0"><b>
+    <h2 class="py-4 px-5 pb-0" style="height:6.8vh"><b>
         <?php
         echo "Bentornato {$_SESSION['username']}!";
         ?>
@@ -41,30 +41,16 @@
     <!-- Container with grid rows taking full remaining height -->
     <section class="container-fluid px-5 py-3 flex-grow-1 d-flex flex-column justify-content-between">
         <!-- First Row -->
-        <div class="row h-50 mb-4">
-            <section class="col-3 secbg rounded-5 shadow me-5 p-0 position-relative overflow-hidden h-100">
+        <div class="row mb-4" style="height: 41.9vh">
+            <section class="col-xl-3 col-md-6 secbg rounded-5 shadow me-5 p-0 position-relative overflow-hidden h-100">
                 <?php require "notes/card.html"?>
             </section>
-            <section class="col-3 secbg rounded-5 shadow me-5 p-0 position-relative overflow-hidden h-100">
-            </section>
         </div>
-    <!-- Second Row -->
-        <div class="row h-50 mb-3">
+        <!-- Second Row -->
+        <div class="row mb-4" style="height:41.9vh">
             <section class="col-4 secbg rounded-5 shadow me-5"></section>
             <section class="col-5 secbg rounded-5 shadow"></section>
         </div>
     </section>
-    <div id="fullblur" class="position-fixed start-0 end-0 top-0 bottom-0 justify-content-center align-items-center d-flex d-none">
-        <div class="content h-50 w-50 secbg rounded-4 position-relative">
-            <button id="fullbtn" type="button" class="btn-close position-absolute end-0 top-0 p-4" aria-label="Close"></button>
-            <div id="mainstuffcont"></div>
-        </div>
-    </div>
-    <script>
-        $("#fullbtn").on("click", function() {
-            $("#mainstuffcont").html("")
-            $("#fullblur").addClass("d-none");
-        })
-    </script>
 </body>
 </html>

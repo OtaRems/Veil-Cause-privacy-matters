@@ -1,15 +1,21 @@
 [data-bs-theme="dark"] {
     --bs-body-bg: #232D3F !important;
-    --bs-secondary-bg: #0F0F0F !important;
+    --bs-secondary-bg: #0F0F0Fbb !important;
     --bs-primary: #005B41 !important;
     --bs-primary-rgb: 0, 91, 65 !important;
     --altrocolore: #008170;
-
+    --note-color-0: var(--bs-body-bg) ;
+    --note-color-1: #8a508f;
+    --note-color-2: #cc0863;
+    --note-color-3: #ff8531;
+    --note-color-4: #8cb357;
+    --note-color-5: #18bfae;
 }
 
 body {
-    background: radial-gradient( var(--bs-body-bg), var(--bs-secondary-bg)) !important;     
+    background: radial-gradient( var(--bs-body-bg), var(--bs-secondary-bg)) !important;
 }
+
 .secbg {
     background-color: var(--bs-secondary-bg);
     
@@ -24,7 +30,7 @@ body {
 }
 
 .evidtext{
-    color: var(--altrocolore);
+    color: var(--bs-primary);
 }
 
 .btn-primary {
@@ -57,6 +63,7 @@ body {
 
 .list-group-item:hover{
     filter:brightness(1.5);
+    text-shadow: 0 0 20px #ffffff30;
 }
 
 .roundbtn:hover {
@@ -112,17 +119,47 @@ body {
 }
 
 .notegroup-1 {
-    color: green;
+    color: var(--note-color-1);
 }
 .notegroup-2 {
-    color: yellow;
+    color: var(--note-color-2);
 }
 .notegroup-3 {
-    color: orange;
+    color: var(--note-color-3);
 }
 .notegroup-4 {
-    color: red;
+    color: var(--note-color-4);
 }
 .notegroup-5 {
-    color: purple;
+    color: var(--note-color-5);
+}
+
+li[data-group="5"]::before {
+    content: "⬤";
+    color: var(--note-color-5);
+}
+
+li[data-group="4"]::before {
+    content: "⬤";
+    color: var(--note-color-4);
+}
+
+li[data-group="3"]::before {
+    content: "⬤";
+    color: var(--note-color-3);
+}
+
+li[data-group="2"]::before {
+    content: "⬤";
+    color: var(--note-color-2);
+}
+
+li[data-group="1"]::before {
+    content: "⬤";
+    color: var(--note-color-1);
+}
+
+li[data-group="0"]::before {
+    content: "⬤";
+    color: var(--note-color-0)
 }

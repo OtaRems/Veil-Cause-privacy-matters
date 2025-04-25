@@ -3,7 +3,7 @@
     require __DIR__ . "/../../funcs/session.php";
 
     avviaSessioneProtetta(15 * 60);
-    $userid = $_SESSION['uid'];
+    $userid = (int) $_SESSION['uid'];
 
 
     //se vogliamo inserire una nota
@@ -20,18 +20,18 @@
         echo "STATUS: OK";
 
         //se vogliamo prendere le note
-    } else if ($_SERVER['REQUEST_METHOD' === 'GET']) {
+    } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-        $sql = "SELECT id, titolo, testo, gruppo, iv FROM note WHERE userID = ?";
+        header('Content-Type: application/json');
+
+        $sql = "SELECT IDNota, titolo, testo, gruppo, iv FROM note WHERE userID = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $userid);
         $stmt->execute();
 
         $result = $stmt->get_result();
-        $notes = [];
+        $notes = $result->fetch_all(MYSQLI_ASSOC);
 
-        while ($row = $result->fetch_assoc()) {
-            $notes[] = $row;
-        }
+        echo json_encode($notes);
     }
 ?>
