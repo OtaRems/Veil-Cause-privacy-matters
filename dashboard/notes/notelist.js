@@ -28,18 +28,17 @@ async function addNoteList(notes) {
         const titolo = decoder.decode(titoloDecrypted);
         const testo = decoder.decode(testoDecrypted);
         var testotagliato = testo.length > 30 ? testo.substring(0, 30) + "..." : testo;
+        testotagliato = testotagliato.replace(/<br>/g, "")
+        var time = note.lastEdited.replace(/-/g, "/").substring(0,10)
     
         // 👇 Ora puoi aggiungerli al DOM come vuoi
         notelist = `<li id="note${note.IDNota}" data-group="${note.gruppo}" data-idnota="${note.IDNota}" class="list-group-item d-flex justify-content-between align-items-start border border-0">
           <div class="ps-2 me-auto">
               <div class="fw-bold">${titolo}</div>
               <span class="text-secondary">${testotagliato}</span>
+                  <small class="position-absolute top-50 end-0 translate-middle-y text-secondary pe-4">${time}</small>
             </div>
           </li>`
           $("#notelist").append(notelist);
       }
-
-      $("#notelist .list-group-item").on("click", function(nota) {
-        console.log($(this).data("idnota"))
-      })
 }

@@ -1,5 +1,6 @@
 <script src="notes/notelist.js"></script>
 <script src="notes/addnote.js"></script>
+<script src="notes/editnote.js"></script>
 <div id="notecont">
   <h4 class='ps-4 pt-4 evidtext'><b>Note</b></h4>
   <div class="dropdown position-absolute top-0 end-0 m-4" id="filtronote" >
@@ -24,13 +25,14 @@
 
 <script>
   var notes
+  var alertnum = 0
   $( async () => {
     const response = await fetch("notes/logic.php");
     notes = await response.json();
     await addNoteList(notes);
 
     //tasto per filtrare le note
-    $("#filtronote .dropdown-item").on("click", async function(tasto) {
+    $("#filtronote .dropdown-item").on("click", function(tasto) {
       tasto.preventDefault();
       const value = $(this).data("value");
       const label = $(this).text();
@@ -41,24 +43,36 @@
       if (groupClass) {
         $button.addClass(groupClass[0]);
       }
-
       $("#filtronote button").text(label);
 
-      if (value == 0) {
-        await addNoteList(notes);
-        return;
-      }
-      var filterednotes = notes.filter(function (el) {
-        return el.gruppo == value;
+      let visiblenotecount = 0;
+      $("#notelist .list-group-item").each(function() {
+        const gruppo = $(this).data("group");
+
+        if (value == 0 || gruppo == value) {
+            $(this).removeClass("d-none"); // Mostra se filtro = tutti o se combacia
+            visiblenotecount++
+        } else {
+            $(this).addClass("d-none"); // Altrimenti nascondi
+        }
       });
-      await addNoteList(filterednotes);
+
+      $("#notelist .no-notes-msg").remove(); // Remove the empty message if needed
+      if (visiblenotecount === 0) {
+        $("#notelist").append(`<div class='no-notes-msg mt-5 p-5 text-center text-secondary'>Ops, non hai ancora inserito nessuna nota!</div>`)
+      }
+
     })
+
+    $("#notelist").on("click",".list-group-item", function() {
+        const noteid = ($(this).data("idnota"))
+        const notaselez = notes.find(o => o.IDNota === noteid);
+        editNoteState(notaselez)
+      })
   })
 
   //spawniamo il popup quando vogliamo aggiungere una nota
-  var alertnum = 0
   $("#addnotebtn").on("click", function() {
       addNoteState()
-      alertnum++
   })
 </script>

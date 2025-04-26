@@ -81,7 +81,7 @@ function bindNoteEvents() {
       const $button = $("#customSelect button");
 
       $button.removeClass("notegroup-1 notegroup-2 notegroup-3 notegroup-4 notegroup-5");
-
+      
       if (groupClass) {
         $button.addClass(groupClass[0]);
       }
@@ -150,7 +150,8 @@ function bindNoteEvents() {
             title: base64Title,
             text: base64Text,
             iv:base64IV,
-            group:group
+            group:group,
+            request: "add"
           },
           success: function(res) {
             console.log(res)
@@ -166,7 +167,7 @@ function bindNoteEvents() {
 
       //ritorno alla lista di note quando si finisce di caricare
       $.ajax({
-        url:"note/card.html",
+        url:"notes/card.html",
         method: "GET",
         success:function(res) {
           $("#notecont").html(res);

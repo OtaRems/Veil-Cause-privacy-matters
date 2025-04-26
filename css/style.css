@@ -1,6 +1,6 @@
 [data-bs-theme="dark"] {
     --bs-body-bg: #232D3F !important;
-    --bs-secondary-bg: #0F0F0Fbb !important;
+    --bs-secondary-bg: #0F0F0F99 !important;
     --bs-primary: #005B41 !important;
     --bs-primary-rgb: 0, 91, 65 !important;
     --altrocolore: #008170;
@@ -13,7 +13,9 @@
 }
 
 body {
-    background: radial-gradient( var(--bs-body-bg), var(--bs-secondary-bg)) !important;
+    background: url(/img/peak_background.svg);
+    background-size: cover;
+    background-position: top left;
 }
 
 .secbg {
@@ -59,6 +61,7 @@ body {
     padding-bottom: 1rem;
     padding-left: 1.5rem;
     border-color: #ffffff1a;
+    transition: all 0.2s ease;
 }
 
 .list-group-item:hover{
