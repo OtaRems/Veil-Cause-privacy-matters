@@ -1,7 +1,10 @@
 function addFileState() {
     $("#filecont").html(` 
-      <form class="px-3">
-        <div class="btn-toolbar position-absolute bottom-0 p-4 mt-3">
+      <form class="px-4 pe-5">
+        <label for="fileInput" class="mt-4">Seleziona il file che vuoi inserire</label>
+        <input type="file" id="fileInput" class="form-control w-75"></input>
+
+        <div class="btn-toolbar mt-3">
           <div class="col-3 pe-3">
             <select class="form-select form-select-sm d-none" aria-label="Group-select" id="realfileselect">
               <option value="0" selected>G</option>
@@ -24,8 +27,6 @@ function addFileState() {
             </div>
           </div>
         </div>
-
-        <input type="file" id="fileInput" class="form-control"></input>
       </form>
     
     <!--Pulsante indietro-->
@@ -74,6 +75,19 @@ function bindFileEvents() {
     $("#savefilebtn").on("click", async function () {
       alertnum++
       const alertId = `alertfile-${alertnum}`;
+
+      const file = $("#fileInput")[0].files[0];
+      if (!file) {
+        let text = `<b>Errore:</b> Devi inserire prima un file!`
+        addAlert("danger", text, alertId);
+        return
+      };
+
+      const formData = new FormData();
+      formData.append("file", file);
+      console.log("Nome file:", file.name);
+      console.log("Dimensione file:", (file.size / (1024 * 1024)).toFixed(2), "MB");
+
 
 
       //ritorno alla lista di file quando si finisce di caricare
