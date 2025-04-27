@@ -48,33 +48,33 @@
     <section class="container-fluid px-5 py-3" width="100vw">
         <div class="row">
             <!--Sezione di sinistra-->
-            <div class="col-8">
+            <div class="col-xl-8">
                 <!-- First Row -->
                 <div class="row" style="min-height: 41.9vh">
-                    <section class="col-xl-5 me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
+                    <section class="col-md-5 me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
                         <h4 class='ps-4 pt-4 evidtext'><b>Note</b></h4>
                         <?php require "notes/card.html"?>
                     </section>
-                    <section class="col-xl-6 me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
+                    <section class="col-md-6 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
                         <h4 class='ps-4 pt-4 evidtext'><b>Calendario</b></h4>
                         <?php require "calendar/card.html"?>
                     </section>
                 </div>
                 <!-- Second Row -->
                 <div class="row" style="min-height: 41.9vh">
-                    <section class="col-6 me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
+                    <section class="col-md-6 me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
                         <h4 class='ps-4 pt-4 evidtext'><b>Task giornaliere</b></h4>
                         <?php require "dailytasks/card.html"?>
                     </section>
-                    <section class="col-5 me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
+                    <section class="col-md-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
                         <h4 class='ps-4 pt-4 evidtext'><b>Cloud storage cryptato</b></h4>
                         <?php require "filemanager/card.html"?>
                     </section>
                 </div>
             </div>
             <!--Sezione di destra-->
-            <div class="col-4">
-                <section class="me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 83.8vh">
+            <div class="col-xl-4">
+                <section class=" mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 83.8vh">
                     <h4 class='ps-4 pt-4 evidtext'><b>Messaggi privati</b></h4>
                     <?php require "msgs/card.html"?>
                 </section>

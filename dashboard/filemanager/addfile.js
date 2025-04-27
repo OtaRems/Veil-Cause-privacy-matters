@@ -83,11 +83,46 @@ function bindFileEvents() {
         return
       };
 
-      const formData = new FormData();
-      formData.append("file", file);
-      console.log("Nome file:", file.name);
-      console.log("Dimensione file:", (file.size / (1024 * 1024)).toFixed(2), "MB");
+      let fileName = file.name
+      let fileSize = (file.size / (1024 * 1024)).toFixed(2)
 
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+
+      const fileBuffer = await file.arrayBuffer();
+
+      const encryptedContent = await crypto.subtle.encrypt(
+          { name: "AES-GCM", iv: iv },
+          key,
+          fileBuffer
+      );
+
+      const base64IV = btoa(String.fromCharCode(...iv));
+      
+      // Use FormData to send the file and encrypted data
+      const formData = new FormData();
+      formData.append("filename", fileName);
+      formData.append("filesize", fileSize);
+      formData.append("iv", base64IV);
+      formData.append("encryptedfile", new Blob([encryptedContent]), fileName);
+      formData.append("group", $("#realfileselect").val());
+
+      // Send the data using AJAX
+  $.ajax({
+    url: "filemanager/logic.php",
+    method: "POST",
+    data: formData,
+    processData: false, // Don't process data as a query string
+    contentType: false, // Don't set content-type header, let FormData handle it
+    success: function(response) {
+      console.log("File encrypted and uploaded successfully!");
+      // Handle the success response if needed
+    },
+    error: function(xhr, status, error) {
+      console.error("Upload failed:", error);
+      let text = `<b>Errore:</b> C'è stato un errore durante il caricamento del file!`;
+      addAlert("danger", text, alertId);
+    }
+  });
 
 
       //ritorno alla lista di file quando si finisce di caricare
