@@ -1,16 +1,9 @@
-function addNoteState() {
-    $("#notecont").html(` 
-        <h4 class='ps-4 pt-4 evidtext'><b>Note</b></h4>
+function addfileState() {
+    $("#filecont").html(` 
         <form>
-        <input type="text" name="titolo" id="titlenota" placeholder="Nuovo Titolo" class="form-control form-control-lg px-4" style="background:none;border:none; font-weight:bolder" maxlength="30" required>
-        <div id="testonota" contenteditable="true" data-placeholder="Inserisci il testo della tua nota privata..." spellcheck="false" class="form-control px-4 overflow-scroll" style="height: 13rem;background:none;border:none;"></div>
         <div class="btn-toolbar px-4 mt-3">
-          <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-notecode="bold"><b>B</b></button>
-          <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-notecode="italic"><i>It</i></button>
-          <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-notecode="underline"><u>U</u></button>
-          <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-notecode="insertUnorderedList"><svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512"><path fill="#bbb" d="M64 144a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM64 464a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48-208a48 48 0 1 0 -96 0 48 48 0 1 0 96 0z"/></svg></button>
           <div class="col-3 pe-3">
-            <select class="form-select form-select-sm d-none" aria-label="Group-select" id="realnoteselect">
+            <select class="form-select form-select-sm d-none" aria-label="Group-select" id="realselect">
               <option value="0" selected>G</option>
               <option value="1">g1</option>
               <option value="2">g2</option>
@@ -18,7 +11,7 @@ function addNoteState() {
               <option value="4">g4</option>
               <option value="5">g5</option>
             </select>
-            <div id="customnoteselect" class="dropdown">
+            <div id="customSelect" class="dropdown">
               <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">group</button>
               <ul class="dropdown-menu" style="--bs-dropdown-min-width: 6rem;">
                 <li><a class="dropdown-item notegroup-1" href="#" data-value="1">⬤</a></li>
@@ -30,7 +23,6 @@ function addNoteState() {
               </ul>
             </div>
           </div>
-          
         </div>
     </form>
     
@@ -98,12 +90,12 @@ function bindNoteEvents() {
 
 
     //seleziona il gruppo della nota
-    $("#customnoteselect .dropdown-item").on("click", function (e) {
+    $("#customSelect .dropdown-item").on("click", function (e) {
       e.preventDefault();
       const value = $(this).data("value");
       const label = $(this).text();
       const groupClass = $(this).attr("class").match(/notegroup-\d/);
-      const $button = $("#customnoteselect button");
+      const $button = $("#customSelect button");
 
       $button.removeClass("notegroup-1 notegroup-2 notegroup-3 notegroup-4 notegroup-5");
       
@@ -111,8 +103,8 @@ function bindNoteEvents() {
         $button.addClass(groupClass[0]);
       }
 
-      $("#realnoteselect").val(value);
-      $("#customnoteselect button").text(label);
+      $("#realselect").val(value);
+      $("#customSelect button").text(label);
     });
 
     //tasto per andare indietro
@@ -131,7 +123,7 @@ function bindNoteEvents() {
       var titoloPlain = $("#titlenota").val()
       titoloPlain = titoloPlain.trim()
       const testoPlain = $("#testonota").html();
-      const group = $("#realnoteselect").val();
+      const group = $("#realselect").val();
 
       alertnum++
       const alertId = `alertnote-${alertnum}`;

@@ -29,6 +29,7 @@
   $( async () => {
     const response = await fetch("notes/logic.php");
     notes = await response.json();
+    //aggiungiamo la lista di note
     await addNoteList(notes);
 
     //tasto per filtrare le note
@@ -59,11 +60,12 @@
 
       $("#notelist .no-notes-msg").remove(); // Remove the empty message if needed
       if (visiblenotecount === 0) {
-        $("#notelist").append(`<div class='no-notes-msg mt-5 p-5 text-center text-secondary'>Ops, non hai ancora inserito nessuna nota!</div>`)
+        $("#notelist").append(`<div class='no-notes-msg position-absolute top-50 start-50 translate-middle text-center text-secondary'>Ops, non hai ancora inserito nessuna nota!</div>`)
       }
 
     })
 
+    //quando si clicca una nota
     $("#notelist").on("click",".list-group-item", function() {
         const noteid = ($(this).data("idnota"))
         const notaselez = notes.find(o => o.IDNota === noteid);
@@ -75,4 +77,5 @@
   $("#addnotebtn").on("click", function() {
       addNoteState()
   })
+
 </script>

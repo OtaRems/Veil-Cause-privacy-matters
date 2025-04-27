@@ -23,7 +23,7 @@ async function editNoteState(notaSelez) {
     $("#notecont").html(` 
         <h4 class='ps-4 pt-4 evidtext'><b>Note</b></h4>
         <form data-idnota="${notaSelez.IDNota}">
-        <input type="text" name="titolo" id="titlenota" placeholder="Nuovo Titolo" class="form-control form-control-lg px-4" style="background:none;border:none; font-weight:bolder" maxlength="20" required value="${titolo}">
+        <input type="text" name="titolo" id="titlenota" placeholder="Nuovo Titolo" class="form-control form-control-lg px-4" style="background:none;border:none; font-weight:bolder" maxlength="30" required value="${titolo}">
         <div id="testonota" contenteditable="true" data-placeholder="Inserisci il testo della tua nota privata..." spellcheck="false" class="form-control px-4 overflow-scroll" style="height: 13rem;background:none;border:none;">${testo}</div>
         <div class="btn-toolbar px-4 mt-3">
           <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-notecode="bold"><b>B</b></button>

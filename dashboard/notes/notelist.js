@@ -3,7 +3,7 @@ async function addNoteList(notes) {
     $("#notelist").html("")
 
     if (!Array.isArray(notes) || notes.length === 0) {
-        $("#notelist").html(`<div class='mt-5 p-5 text-center text-secondary'>Ops, non hai ancora inserito nessuna nota!</div>`)
+        $("#notelist").html(`<div class='no-notes-msg position-absolute top-50 start-50 translate-middle text-center text-secondary'>Ops, non hai ancora inserito nessuna nota!</div>`)
         return;
       }
     
@@ -28,7 +28,7 @@ async function addNoteList(notes) {
         const titolo = decoder.decode(titoloDecrypted);
         const testo = decoder.decode(testoDecrypted);
         var testotagliato = testo.length > 30 ? testo.substring(0, 30) + "..." : testo;
-        testotagliato = testotagliato.replace(/<br>/g, "")
+        testotagliato = testotagliato.replace(/<br\s*\/?>|<\/?(b|i|u)>/gi, "");
         var time = note.lastEdited.replace(/-/g, "/").substring(0,10)
     
         // 👇 Ora puoi aggiungerli al DOM come vuoi

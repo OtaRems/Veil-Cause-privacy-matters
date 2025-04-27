@@ -91,6 +91,7 @@ body {
     right: 1.5rem;
     bottom: 1.5rem;
     transition: all 0.2s ease-in-out;
+    box-shadow: 0 0 20px #0e0e0e9f;
 }
 
 .btn-close:focus {
@@ -165,4 +166,17 @@ li[data-group="1"]::before {
 li[data-group="0"]::before {
     content: "⬤";
     color: var(--note-color-0)
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+  
+.shake-animation {
+    animation: shake 0.4s;
 }
