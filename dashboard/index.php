@@ -6,8 +6,8 @@
     <title>Veil - Dashboard</title>
     <link rel="manifest" href="../manifest.json">
     <script src="/funcs/js/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/funcs/js/bootstrap.bundle.min.js"></script>
     <script src="/funcs/js/app.js"></script>
     <script src="/funcs/js/keyderiv.js"></script>
     <script src="/funcs/js/alert.js"></script>
@@ -18,6 +18,7 @@
         avviaSessioneProtetta(15 * 60); // 15 minuti di timeout
     ?>
     <script>
+        var alertnum = 0
         let key
         $( async () => {
             if (keyManager.hasKey()) {
@@ -51,18 +52,22 @@
                 <!-- First Row -->
                 <div class="row" style="min-height: 41.9vh">
                     <section class="col-xl-5 me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
+                        <h4 class='ps-4 pt-4 evidtext'><b>Note</b></h4>
                         <?php require "notes/card.html"?>
                     </section>
                     <section class="col-xl-6 me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
+                        <h4 class='ps-4 pt-4 evidtext'><b>Calendario</b></h4>
                         <?php require "calendar/card.html"?>
                     </section>
                 </div>
                 <!-- Second Row -->
                 <div class="row" style="min-height: 41.9vh">
                     <section class="col-xl-6 me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
+                        <h4 class='ps-4 pt-4 evidtext'><b>Task giornaliere</b></h4>
                         <?php require "dailytasks/card.html"?>
                     </section>
                     <section class="col-xl-5 me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 41.9vh">
+                        <h4 class='ps-4 pt-4 evidtext'><b>Cloud storage cryptato</b></h4>
                         <?php require "filemanager/card.html"?>
                     </section>
                 </div>
@@ -70,7 +75,8 @@
             <!--Sezione di destra-->
             <div class="col-4 m-0 p-0">
                 <section class="me-5 mb-4 secbg rounded-5 shadow p-0 position-relative overflow-hidden" style="height: 83.8vh">
-                <?php require "msgs/card.html"?>
+                    <h4 class='ps-4 pt-4 evidtext'><b>Messaggi privati</b></h4>
+                    <?php require "msgs/card.html"?>
                 </section>
             </div>
         </div>

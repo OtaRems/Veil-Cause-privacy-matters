@@ -1,6 +1,6 @@
 [data-bs-theme="dark"] {
     --bs-body-bg: #232D3F !important;
-    --bs-secondary-bg: #0F0F0F99 !important;
+    --bs-secondary-bg: #0F0F0F88 !important;
     --bs-primary: #005B41 !important;
     --bs-primary-rgb: 0, 91, 65 !important;
     --altrocolore: #008170;
@@ -13,13 +13,14 @@
 }
 
 body {
-    background: url(/img/peak_background.svg);
+    background: url("/img/peak_background.svg");
     background-size: cover;
     background-position: top left;
 }
 
 .secbg {
     background-color: var(--bs-secondary-bg);
+    backdrop-filter: blur(2px);
     
 }
 
@@ -122,19 +123,19 @@ body {
     pointer-events: none;
 }
 
-.notegroup-1 {
+.group-1 {
     color: var(--note-color-1);
 }
-.notegroup-2 {
+.group-2 {
     color: var(--note-color-2);
 }
-.notegroup-3 {
+.group-3 {
     color: var(--note-color-3);
 }
-.notegroup-4 {
+.group-4 {
     color: var(--note-color-4);
 }
-.notegroup-5 {
+.group-5 {
     color: var(--note-color-5);
 }
 

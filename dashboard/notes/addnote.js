@@ -1,6 +1,5 @@
 function addNoteState() {
     $("#notecont").html(` 
-        <h4 class='ps-4 pt-4 evidtext'><b>Note</b></h4>
         <form>
         <input type="text" name="titolo" id="titlenota" placeholder="Nuovo Titolo" class="form-control form-control-lg px-4" style="background:none;border:none; font-weight:bolder" maxlength="30" required>
         <div id="testonota" contenteditable="true" data-placeholder="Inserisci il testo della tua nota privata..." spellcheck="false" class="form-control px-4 overflow-scroll" style="height: 13rem;background:none;border:none;"></div>
@@ -21,12 +20,12 @@ function addNoteState() {
             <div id="customnoteselect" class="dropdown">
               <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">group</button>
               <ul class="dropdown-menu" style="--bs-dropdown-min-width: 6rem;">
-                <li><a class="dropdown-item notegroup-1" href="#" data-value="1">⬤</a></li>
-                <li><a class="dropdown-item notegroup-2" href="#" data-value="2">⬤</a></li>
-                <li><a class="dropdown-item notegroup-3" href="#" data-value="3">⬤</a></li>
-                <li><a class="dropdown-item notegroup-4" href="#" data-value="4">⬤</a></li>
-                <li><a class="dropdown-item notegroup-5" href="#" data-value="5">⬤</a></li>
-                <li><a class="dropdown-item notegroup-0" href="#" data-value="0">group</a></li>
+                <li><a class="dropdown-item group-1" href="#" data-value="1">⬤</a></li>
+                <li><a class="dropdown-item group-2" href="#" data-value="2">⬤</a></li>
+                <li><a class="dropdown-item group-3" href="#" data-value="3">⬤</a></li>
+                <li><a class="dropdown-item group-4" href="#" data-value="4">⬤</a></li>
+                <li><a class="dropdown-item group-5" href="#" data-value="5">⬤</a></li>
+                <li><a class="dropdown-item group-0" href="#" data-value="0">group</a></li>
               </ul>
             </div>
           </div>
@@ -102,10 +101,10 @@ function bindNoteEvents() {
       e.preventDefault();
       const value = $(this).data("value");
       const label = $(this).text();
-      const groupClass = $(this).attr("class").match(/notegroup-\d/);
+      const groupClass = $(this).attr("class").match(/group-\d/);
       const $button = $("#customnoteselect button");
 
-      $button.removeClass("notegroup-1 notegroup-2 notegroup-3 notegroup-4 notegroup-5");
+      $button.removeClass("group-1 group-2 group-3 group-4 group-5");
       
       if (groupClass) {
         $button.addClass(groupClass[0]);

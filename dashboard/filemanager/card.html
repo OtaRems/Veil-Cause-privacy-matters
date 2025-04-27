@@ -1,5 +1,5 @@
-<h4 class='ps-4 pt-4 evidtext'><b>Cloud storage cryptato</b></h4>
-<div id="filecont">
+<script src="filemanager/addfile.js"></script>
+<div id="filecont"">
     <div class='overflow-scroll' style="height: 21rem;">
         <ul id='filelist' class='list-group list-group-flush'>    
         </ul>
@@ -8,3 +8,9 @@
       <!--Pulsante per aggiungere Note-->  
       <button id="addfilebtn" class="roundbtn">+</button>
 </div>
+
+<script>
+    $("#addfilebtn").on("click", function() {
+        addFileState();
+    })
+</script>

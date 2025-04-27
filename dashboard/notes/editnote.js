@@ -21,7 +21,6 @@ async function editNoteState(notaSelez) {
     const testo = decoder.decode(testoDecrypted);
 
     $("#notecont").html(` 
-        <h4 class='ps-4 pt-4 evidtext'><b>Note</b></h4>
         <form data-idnota="${notaSelez.IDNota}">
         <input type="text" name="titolo" id="titlenota" placeholder="Nuovo Titolo" class="form-control form-control-lg px-4" style="background:none;border:none; font-weight:bolder" maxlength="30" required value="${titolo}">
         <div id="testonota" contenteditable="true" data-placeholder="Inserisci il testo della tua nota privata..." spellcheck="false" class="form-control px-4 overflow-scroll" style="height: 13rem;background:none;border:none;">${testo}</div>
@@ -42,12 +41,12 @@ async function editNoteState(notaSelez) {
             <div id="customSelect" class="dropdown">
               <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">group</button>
               <ul class="dropdown-menu" style="--bs-dropdown-min-width: 6rem;">
-                <li><a class="dropdown-item notegroup-1" href="#" data-value="1">⬤</a></li>
-                <li><a class="dropdown-item notegroup-2" href="#" data-value="2">⬤</a></li>
-                <li><a class="dropdown-item notegroup-3" href="#" data-value="3">⬤</a></li>
-                <li><a class="dropdown-item notegroup-4" href="#" data-value="4">⬤</a></li>
-                <li><a class="dropdown-item notegroup-5" href="#" data-value="5">⬤</a></li>
-                <li><a class="dropdown-item notegroup-0" href="#" data-value="0">group</a></li>
+                <li><a class="dropdown-item group-1" href="#" data-value="1">⬤</a></li>
+                <li><a class="dropdown-item group-2" href="#" data-value="2">⬤</a></li>
+                <li><a class="dropdown-item group-3" href="#" data-value="3">⬤</a></li>
+                <li><a class="dropdown-item group-4" href="#" data-value="4">⬤</a></li>
+                <li><a class="dropdown-item group-5" href="#" data-value="5">⬤</a></li>
+                <li><a class="dropdown-item group-0" href="#" data-value="0">group</a></li>
               </ul>
             </div>
           </div>
@@ -69,7 +68,7 @@ async function editNoteState(notaSelez) {
 
     //Settiamo il gruppo della nota
     let btn = $("#customSelect button");
-    let labclass = `notegroup-${notaSelez.gruppo}`
+    let labclass = `group-${notaSelez.gruppo}`
     let texto = $(`.${labclass}`).text()
     if (notaSelez.gruppo != 0) {
       btn.addClass(labclass);

@@ -2,7 +2,6 @@
 <script src="notes/addnote.js"></script>
 <script src="notes/editnote.js"></script>
 <div id="notecont">
-  <h4 class='ps-4 pt-4 evidtext'><b>Note</b></h4>
   <div class="dropdown position-absolute top-0 end-0 m-4" id="filtronote" >
     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">tutte</button>
     <ul class="dropdown-menu" style="--bs-dropdown-min-width: 6rem;">
@@ -25,7 +24,6 @@
 
 <script>
   var notes
-  var alertnum = 0
   $( async () => {
     const response = await fetch("notes/logic.php");
     notes = await response.json();
