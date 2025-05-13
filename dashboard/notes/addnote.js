@@ -127,10 +127,9 @@ function bindNoteEvents() {
 
     //tasto per salvare la nota
     $("#savenotebtn").on("click", async function () {
-      var titoloPlain = $("#titlenota").val()
-      titoloPlain = titoloPlain.trim()
-      const testoPlain = $("#testonota").html();
-      const group = $("#realnoteselect").val();
+      var titoloPlain = $("#titlenota").val().trim()
+      var testoPlain = $("#testonota").html();
+      var group = $("#realnoteselect").val();
 
       alertnum++
       const alertId = `alertnote-${alertnum}`;
@@ -142,52 +141,26 @@ function bindNoteEvents() {
         return;
       }
 
+      const { base64Title, base64Text, base64IV, base64EncryptedKey } = await encryptNote(titoloPlain, testoPlain, pubkey);
 
-      const encoder = new TextEncoder();
-      const titoloData = encoder.encode(titoloPlain);
-      const testoData = encoder.encode(testoPlain);
-
-      const iv = crypto.getRandomValues(new Uint8Array(12)); // IV per AES-GCM
-
-      try {
-        const cryptTitle = await crypto.subtle.encrypt(
-          { name: "AES-GCM", iv },
-          key,
-          titoloData
-        );
-
-        const cryptText = await crypto.subtle.encrypt(
-          { name: "AES-GCM", iv },
-          key,
-          testoData
-        );
-
-        // Convertiamo in Base64 per inviare via AJAX
-        const base64Title = btoa(String.fromCharCode(...new Uint8Array(cryptTitle)));
-        const base64Text = btoa(String.fromCharCode(...new Uint8Array(cryptText)));
-        const base64IV = btoa(String.fromCharCode(...iv));
-
-        $.ajax({
-          url:"notes/logic.php",
+        // 6. Invia al server
+      $.ajax({
+          url: "notes/logic.php",
           method: "POST",
           data: {
-            title: base64Title,
-            text: base64Text,
-            iv:base64IV,
-            group:group,
-            request: "add"
+              title: base64Title,
+              text: base64Text,
+              iv: base64IV,
+              group: group,
+              encryptedKey: base64EncryptedKey,
+              request: "add"
           },
-          success: function(res) {
-            console.log(res)
-            let text = `<b>Stato:</b> Nota aggiunta con successo!`
-            addAlert("success", text, alertId);
-
+          success: function (res) {
+              console.log(res);
+              let text = `<b>Stato:</b> Nota aggiunta con successo!`;
+              addAlert("success", text, alertId);
           }
-      })
-
-      } catch (error) {
-        console.error("Errore durante la cifratura:", error);
-      }
+      });
 
       //ritorno alla lista di note quando si finisce di caricare
       $.ajax({

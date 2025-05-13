@@ -1,6 +1,4 @@
 const keyManager = (() => {
-    const storageKey = "aesKey";
-
     // Encode string to Uint8Array
     function encode(str) {
         return new TextEncoder().encode(str);
@@ -21,7 +19,7 @@ const keyManager = (() => {
 
     return {
         // Derive a 256-bit AES-GCM key from password and salt
-        async deriveKey(password, salt) {
+        async deriveAesKey(password, salt) {
             const keyMaterial = await crypto.subtle.importKey(
                 "raw",
                 encode(password),
@@ -42,41 +40,78 @@ const keyManager = (() => {
                 true,
                 ["encrypt", "decrypt"]
             );
-
-            await this.storeKey(key);
             return key;
         },
 
-        // Store key in sessionStorage as Base64
-        async storeKey(key) {
-            const raw = await crypto.subtle.exportKey("raw", key);
-            const base64 = arrayBufferToBase64(raw);
-            sessionStorage.setItem(storageKey, base64);
+        // Decrypt the private key and save both keys in sessionStorage
+        async StoreKeys(pubkeyBase64, privkeyEncBase64, ivBase64, aesKey) {
+
+            if (!pubkeyBase64 || !privkeyEncBase64 || !ivBase64 || !aesKey) {
+                throw new Error("Chiavi mancanti o AESKey non inizializzata");
+            }
+
+            // Convert Base64 inputs to ArrayBuffers
+            const privkeyEncBuffer = base64ToArrayBuffer(privkeyEncBase64);
+            const iv = base64ToArrayBuffer(ivBase64);
+            
+            // Decrypt private key with AES-GCM
+            let decryptedPrivKeyBuffer;
+            try {
+                decryptedPrivKeyBuffer = await crypto.subtle.decrypt(
+                    {
+                        name: "AES-GCM",
+                        iv: iv
+                    },
+                    aesKey,
+                    privkeyEncBuffer
+                );
+            } catch (e) {
+                console.error("Decryption of private key failed:", e);
+                throw new Error("Invalid AES key or corrupted encrypted private key.");
+            }
+
+            // Optionally serialize and save Base64 versions for reload
+            sessionStorage.setItem("publicKey", pubkeyBase64);
+            sessionStorage.setItem("privateKey", arrayBufferToBase64(decryptedPrivKeyBuffer));
+
+
+            console.log("Chiavi importate e salvate correttamente in sessionStorage.");
         },
 
-        // Load key from sessionStorage (returns null if missing)
-        async loadKey() {
-            const base64 = sessionStorage.getItem(storageKey);
-            if (!base64) return null;
-
-            const raw = base64ToArrayBuffer(base64);
-            return await crypto.subtle.importKey(
-                "raw",
-                raw,
-                "AES-GCM",
-                false,
-                ["encrypt", "decrypt"]
+        async loadAndImportKeys() {
+            const pubkeyBase64 = sessionStorage.getItem("publicKey");
+            const privkeyBase64 = sessionStorage.getItem("privateKey");
+        
+            if (!pubkeyBase64 || !privkeyBase64) {
+                throw new Error("Dati delle chiavi mancanti o corrotti");
+            }
+        
+            const pubkeyBuffer = base64ToArrayBuffer(pubkeyBase64);
+            const privkeyBuffer = base64ToArrayBuffer(privkeyBase64);
+        
+        
+            const publicKey = await crypto.subtle.importKey(
+                "spki",
+                pubkeyBuffer,
+                { name: "RSA-OAEP", hash: "SHA-256" },
+                true,
+                ["encrypt"]
             );
+        
+            const privateKey = await crypto.subtle.importKey(
+                "pkcs8",
+                privkeyBuffer,
+                { name: "RSA-OAEP", hash: "SHA-256" },
+                true,
+                ["decrypt"]
+            );
+        
+            return { publicKey, privateKey };
         },
-
-        // Clear the key from sessionStorage
-        clearKey() {
-            sessionStorage.removeItem(storageKey);
-        },
-
-        // Check if key exists in sessionStorage
+        
         hasKey() {
-            return sessionStorage.getItem(storageKey) !== null;
+            return sessionStorage.getItem("privateKey") !== null && sessionStorage.getItem("publicKey") !== null;
         }
     };
+
 })();

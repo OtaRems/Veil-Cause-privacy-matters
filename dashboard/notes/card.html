@@ -1,16 +1,17 @@
 <script src="notes/notelist.js"></script>
 <script src="notes/addnote.js"></script>
 <script src="notes/editnote.js"></script>
+<script src="notes/encnote.js"></script>
 <div id="notecont">
   <div class="dropdown position-absolute top-0 end-0 m-4" id="filtronote" >
     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">tutte</button>
     <ul class="dropdown-menu" style="--bs-dropdown-min-width: 6rem;">
-      <li><a class="dropdown-item notegroup-0" href="#" data-value="0">tutte</a></li>
-      <li><a class="dropdown-item notegroup-1" href="#" data-value="1">⬤</a></li>
-      <li><a class="dropdown-item notegroup-2" href="#" data-value="2">⬤</a></li>
-      <li><a class="dropdown-item notegroup-3" href="#" data-value="3">⬤</a></li>
-      <li><a class="dropdown-item notegroup-4" href="#" data-value="4">⬤</a></li>
-      <li><a class="dropdown-item notegroup-5" href="#" data-value="5">⬤</a></li>
+      <li><a class="dropdown-item group-0" href="#" data-value="0">tutte</a></li>
+      <li><a class="dropdown-item group-1" href="#" data-value="1">⬤</a></li>
+      <li><a class="dropdown-item group-2" href="#" data-value="2">⬤</a></li>
+      <li><a class="dropdown-item group-3" href="#" data-value="3">⬤</a></li>
+      <li><a class="dropdown-item group-4" href="#" data-value="4">⬤</a></li>
+      <li><a class="dropdown-item group-5" href="#" data-value="5">⬤</a></li>
     </ul>
   </div>
   <div class='overflow-scroll' style="height: 21rem;">
@@ -35,9 +36,9 @@
       tasto.preventDefault();
       const value = $(this).data("value");
       const label = $(this).text();
-      const groupClass = $(this).attr("class").match(/notegroup-\d/);
+      const groupClass = $(this).attr("class").match(/group-\d/);
       const $button = $("#filtronote button");
-      $button.removeClass("notegroup-1 notegroup-2 notegroup-3 notegroup-4 notegroup-5");
+      $button.removeClass("group-1 group-2 group-3 group-4 group-5");
 
       if (groupClass) {
         $button.addClass(groupClass[0]);

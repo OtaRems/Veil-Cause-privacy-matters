@@ -119,24 +119,34 @@
                         data: { username: user, hashpass: argon },
                     });
 
-                    console.log(res2)
-                    switch (res2) {
-                        case "USER_NOT_FOUND":
-                            $("#UserInput").val("");
-                            $("#PasswordInput").val("");
-                            $("#feeduser").html("Username non trovato!");
-                            $("#feedpass").html("");
-                            $("#bottom-text").html('<a class="form-text" href="../register/">Non hai ancora un account? Registrati qui</a>');
-                            break;
-                        case "LOGIN_FAILED":
-                            $("#PasswordInput").val("");
-                            $("#feedpass").html("Password errata!");
-                            $("#bottom-text").html('<a class="form-text" href="../register/">Non hai ancora un account? Registrati qui</a>');
-                            break;
-                        case "LOGIN_OK":
-                            const key = await keyManager.deriveKey(pass, result);
+                    try {
+                        const parsed = JSON.parse(res2);
+                        if (parsed.status === "LOGIN_OK") {
+                            const pubkey = parsed.pubkey;
+                            const privkey = parsed.privkey;
+                            const iv = parsed.iv;
+                            const key = await keyManager.deriveAesKey(pass, result); // salt ricevuto prima
+                            
+                            keyManager.StoreKeys(pubkey,privkey,iv,key)
+                            
                             location.href = "/dashboard/";
-                            break;
+                        }
+                    } catch (e) {
+                        console.log(e)
+                        switch (res2) {
+                            case "USER_NOT_FOUND":
+                                $("#UserInput").val("");
+                                $("#PasswordInput").val("");
+                                $("#feeduser").html("Username non trovato!");
+                                $("#feedpass").html("");
+                                $("#bottom-text").html('<a class="form-text" href="../register/">Non hai ancora un account? Registrati qui</a>');
+                                break;
+                            case "LOGIN_FAILED":
+                                $("#PasswordInput").val("");
+                                $("#feedpass").html("Password errata!");
+                                $("#bottom-text").html('<a class="form-text" href="../register/">Non hai ancora un account? Registrati qui</a>');
+                                break;
+                        }
                     }
                 } catch (error) {
                     console.error("Errore nella richiesta:", error);

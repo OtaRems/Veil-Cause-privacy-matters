@@ -19,10 +19,15 @@
     ?>
     <script>
         var alertnum = 0
-        let key
+        var pubkey, privkey
         $( async () => {
             if (keyManager.hasKey()) {
-                key = await keyManager.loadKey();
+                try {
+                    ({ pubkey, privkey } = await keyManager.loadAndImportKeys());
+                } catch (err) {
+                    console.error("Errore durante il caricamento delle chiavi:", err);
+                    location.replace("/funcs/logout.php");
+                }
             }else {
                 location.replace("/funcs/logout.php")
             }   
@@ -30,7 +35,13 @@
             $("#logoutbtn").on("click",function() {
                 location.replace("/funcs/logout.php");
             })
+
+                let response = await fetch("https://api.adviceslip.com/advice");
+                let adviceData = await response.json();
+                let advice = adviceData.slip.advice;
+                $("#advtext").html(advice)
         })
+
     </script>
 </head>
 <body class="d-flex flex-column" style="min-height: 100vh;">
@@ -42,6 +53,7 @@
         ?>
     </b>
     <button class="btn btn-outline-secondary btn-sm ms-2" id="logoutbtn">Logout</button>
+    <b class="text-end position-absolute end-0 me-5 text-secondary h5 bottom-0" id="advtext"></b>
     </h2>
 
     <!-- Container with grid rows taking full remaining height -->
