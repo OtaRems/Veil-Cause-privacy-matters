@@ -104,13 +104,31 @@ const keyManager = (() => {
                 { name: "RSA-OAEP", hash: "SHA-256" },
                 true,
                 ["decrypt"]
-            );
-        
+            );        
             return { publicKey, privateKey };
         },
         
         hasKey() {
             return sessionStorage.getItem("privateKey") !== null && sessionStorage.getItem("publicKey") !== null;
+        },
+
+        async decryptAesKey(encryptedAesKey) {
+            const decryptedAesKeyBuffer = await crypto.subtle.decrypt(
+            { name: "RSA-OAEP" },
+            privateKey,  // private RSA key
+            encryptedAesKey
+        );
+
+        // Re-import the AES key (AES-GCM)
+        const key = await crypto.subtle.importKey(
+            "raw",
+            decryptedAesKeyBuffer,
+            { name: "AES-GCM" },
+            true,  // The key is extractable
+            ["encrypt", "decrypt"]  // Usable for encryption and decryption
+        );
+        
+        return key;
         }
     };
 

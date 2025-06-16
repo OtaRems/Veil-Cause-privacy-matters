@@ -30,7 +30,7 @@
         $lastedited = date('Y-m-d H:i:s');
     
         $smtp = $conn->prepare("UPDATE note SET titolo = ?, testo = ?, gruppo = ?, iv = ?, notekey = ?, lastEdited = ? WHERE IDNota = ?");
-        $smtp->bind_param("ssissssi", $titolo, $testo, $group, $iv, $encryptedKey, $lastedited, $idnota);
+        $smtp->bind_param("ssisssi", $titolo, $testo, $group, $iv, $encryptedKey, $lastedited, $idnota);
     
         if ($smtp->execute())
             echo "STATUS: OK";
@@ -52,7 +52,7 @@
     } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         header('Content-Type: application/json');
 
-        $sql = "SELECT IDNota, titolo, testo, gruppo, iv, lastEdited FROM note WHERE userID = ? ORDER BY lastEdited desc";
+        $sql = "SELECT IDNota, titolo, testo, gruppo, iv, lastEdited, notekey FROM note WHERE userID = ? ORDER BY lastEdited desc";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $userid);
         $stmt->execute();

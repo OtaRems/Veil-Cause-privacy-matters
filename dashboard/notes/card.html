@@ -14,7 +14,7 @@
       <li><a class="dropdown-item group-5" href="#" data-value="5">⬤</a></li>
     </ul>
   </div>
-  <div class='overflow-scroll' style="height: 21rem;">
+  <div class='overflow-auto' style="height: 21rem;">
     <ul id='notelist' class='list-group list-group-flush'>    
     </ul>
   </div>
@@ -59,8 +59,9 @@
 
       $("#notelist .no-notes-msg").remove(); // Remove the empty message if needed
       if (visiblenotecount === 0) {
-        $("#notelist").append(`<div class='no-notes-msg position-absolute top-50 start-50 translate-middle text-center text-secondary'>Ops, non hai ancora inserito nessuna nota!</div>`)
+        $("#notelist").append(`<div class='position-absolute top-50 start-50 translate-middle text-center text-secondary no-notes-msg'>Ops, non hai ancora inserito nessuna nota!</div>`)
       }
+
 
     })
 

@@ -11,6 +11,8 @@ async function addNoteList(notes) {
         const iv = Uint8Array.from(atob(note.iv), c => c.charCodeAt(0));
         const titoloBuffer = Uint8Array.from(atob(note.titolo), c => c.charCodeAt(0));
         const testoBuffer = Uint8Array.from(atob(note.testo), c => c.charCodeAt(0));
+        const encAesKey = Uint8Array.from(atob(note.notekey), c => c.charCodeAt(0));
+        const key = await keyManager.decryptAesKey(encAesKey);
     
         const titoloDecrypted = await crypto.subtle.decrypt(
           { name: "AES-GCM", iv },
@@ -31,7 +33,6 @@ async function addNoteList(notes) {
         testotagliato = testotagliato.replace(/<br\s*\/?>|<\/?(b|i|u)>/gi, "");
         var time = note.lastEdited.replace(/-/g, "/").substring(0,10)
     
-        // 👇 Ora puoi aggiungerli al DOM come vuoi
         notelist = `<li id="note${note.IDNota}" data-group="${note.gruppo}" data-idnota="${note.IDNota}" class="list-group-item d-flex justify-content-between align-items-start border border-0">
           <div class="ps-2 me-auto">
               <div class="fw-bold">${titolo}</div>

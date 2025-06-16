@@ -47,30 +47,6 @@ function addNoteState() {
 //funzioni per l'aggiunta di note
 function bindNoteEvents() {
 
-  let formcontrol = $("#titlenota");
-  //animazione per quando si supera il numero di caratteri in un input
-  formcontrol.on("keydown paste", function (e) {
-    if (this.value.length >= this.maxLength) {
-      // Allow control keys like Backspace, Delete, Arrows
-      const allowedKeys = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
-      
-      if (e.type === "paste" || !allowedKeys.includes(e.key)) {
-        triggerAnimation(this);
-        e.preventDefault(); // prevent pasting or typing extra
-      }
-    }
-  });
-  
-  function triggerAnimation(element) {
-    element.classList.add("shake-animation");
-  
-    element.addEventListener("animationend", function handler() {
-      element.classList.remove("shake-animation");
-      element.removeEventListener("animationend", handler);
-    });
-  }
-
-
     function updateButtonStates() {
       $("[data-notecode]").each(function () {
         const cmd = $(this).data("notecode");
@@ -141,7 +117,7 @@ function bindNoteEvents() {
         return;
       }
 
-      const { base64Title, base64Text, base64IV, base64EncryptedKey } = await encryptNote(titoloPlain, testoPlain, pubkey);
+      const { base64Title, base64Text, base64IV, base64EncryptedKey } = await encryptNote(titoloPlain, testoPlain);
 
         // 6. Invia al server
       $.ajax({

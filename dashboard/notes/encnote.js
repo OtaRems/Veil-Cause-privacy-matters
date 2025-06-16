@@ -1,15 +1,10 @@
-async function encryptNote(titoloPlain, testoPlain, pubkey) {
+async function encryptNote(titoloPlain, testoPlain) {
 
     const encoder = new TextEncoder();
     const titoloData = encoder.encode(titoloPlain);
     const testoData = encoder.encode(testoPlain);
 
     const iv = crypto.getRandomValues(new Uint8Array(12)); // IV per AES-GCM
-
-    if (!(pubkey instanceof CryptoKey)) {
-        console.error("pubkey non è una CryptoKey valida:", pubkey);
-        throw new Error("Chiave pubblica non valida.");
-    }
 
     try {
         // 1. Genera una chiave AES randomica
@@ -38,7 +33,7 @@ async function encryptNote(titoloPlain, testoPlain, pubkey) {
         // 4. Cifra la chiave AES con la chiave pubblica RSA dell'utente
         const encryptedAesKey = await crypto.subtle.encrypt(
             { name: "RSA-OAEP" },
-            pubkey,
+            publicKey,
             rawAesKey
         );
 

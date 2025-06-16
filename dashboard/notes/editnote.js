@@ -3,6 +3,8 @@ async function editNoteState(notaSelez) {
     const iv = Uint8Array.from(atob(notaSelez.iv), c => c.charCodeAt(0));
     const titoloBuffer = Uint8Array.from(atob(notaSelez.titolo), c => c.charCodeAt(0));
     const testoBuffer = Uint8Array.from(atob(notaSelez.testo), c => c.charCodeAt(0));
+    const encAesKey = Uint8Array.from(atob(notaSelez.notekey), c => c.charCodeAt(0));
+    const key = await keyManager.decryptAesKey(encAesKey);
 
     const titoloDecrypted = await crypto.subtle.decrypt(
       { name: "AES-GCM", iv },
@@ -30,7 +32,7 @@ async function editNoteState(notaSelez) {
           <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-notecode="underline"><u>U</u></button>
           <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-notecode="insertUnorderedList"><svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512"><path fill="#bbb" d="M64 144a48 48 0 1 0 0-96 48 48 0 1 0 0 96zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM64 464a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48-208a48 48 0 1 0 -96 0 48 48 0 1 0 96 0z"/></svg></button>
           <div class="col-3 pe-3">
-            <select class="form-select form-select-sm d-none" aria-label="Group-select" id="realselect">
+            <select class="form-select form-select-sm d-none" aria-label="Group-select" id="realnoteselect">
               <option value="0" selected>G</option>
               <option value="1">g1</option>
               <option value="2">g2</option>
@@ -38,7 +40,7 @@ async function editNoteState(notaSelez) {
               <option value="4">g4</option>
               <option value="5">g5</option>
             </select>
-            <div id="customSelect" class="dropdown">
+            <div id="customnoteselect" class="dropdown">
               <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">group</button>
               <ul class="dropdown-menu" style="--bs-dropdown-min-width: 6rem;">
                 <li><a class="dropdown-item group-1" href="#" data-value="1">⬤</a></li>
@@ -67,15 +69,15 @@ async function editNoteState(notaSelez) {
     ` )
 
     //Settiamo il gruppo della nota
-    let btn = $("#customSelect button");
+    let btn = $("#customnoteselect button");
     let labclass = `group-${notaSelez.gruppo}`
     let texto = $(`.${labclass}`).text()
     if (notaSelez.gruppo != 0) {
       btn.addClass(labclass);
     }
 
-    $("#realselect").val(notaSelez.gruppo);
-    $("#customSelect button").text(texto);
+    $("#realnoteselect").val(notaSelez.gruppo);
+    $("#customnoteselect button").text(texto);
 
 
     //funzioni per modificare la nota (addnote.js)
@@ -127,7 +129,7 @@ async function editNoteState(notaSelez) {
         var titoloPlain = $("#titlenota").val()
         titoloPlain = titoloPlain.trim()
         const testoPlain = $("#testonota").html();
-        const group = $("#realselect").val();
+        const group = $("#realnoteselect").val();
   
         alertnum++
         const alertId = `alertnote-${alertnum}`;
@@ -138,32 +140,10 @@ async function editNoteState(notaSelez) {
             addAlert("danger",text,alertId)
           return;
         }
-  
-  
-        const encoder = new TextEncoder();
-        const titoloData = encoder.encode(titoloPlain);
-        const testoData = encoder.encode(testoPlain);
-  
-        const iv = crypto.getRandomValues(new Uint8Array(12)); // IV per AES-GCM
-  
         try {
-          const cryptTitle = await crypto.subtle.encrypt(
-            { name: "AES-GCM", iv },
-            key,
-            titoloData
-          );
   
-          const cryptText = await crypto.subtle.encrypt(
-            { name: "AES-GCM", iv },
-            key,
-            testoData
-          );
-  
-          // Convertiamo in Base64 per inviare via AJAX
-          const base64Title = btoa(String.fromCharCode(...new Uint8Array(cryptTitle)));
-          const base64Text = btoa(String.fromCharCode(...new Uint8Array(cryptText)));
-          const base64IV = btoa(String.fromCharCode(...iv));
-  
+        const { base64Title, base64Text, base64IV, base64EncryptedKey } = await encryptNote(titoloPlain, testoPlain);
+
           $.ajax({
             url:"notes/logic.php",
             method: "POST",
@@ -172,6 +152,7 @@ async function editNoteState(notaSelez) {
               title: base64Title,
               text: base64Text,
               iv:base64IV,
+              encryptedKey: base64EncryptedKey,
               group:group,
               request: "edit"
             },

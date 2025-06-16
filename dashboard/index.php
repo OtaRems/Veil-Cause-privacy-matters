@@ -8,7 +8,6 @@
     <script src="/funcs/js/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <script src="/funcs/js/bootstrap.bundle.min.js"></script>
-    <script src="/funcs/js/app.js"></script>
     <script src="/funcs/js/keyderiv.js"></script>
     <script src="/funcs/js/alert.js"></script>
     <link rel="stylesheet" href="/css/style.css">
@@ -23,7 +22,8 @@
         $( async () => {
             if (keyManager.hasKey()) {
                 try {
-                    ({ pubkey, privkey } = await keyManager.loadAndImportKeys());
+                    const keys = await keyManager.loadAndImportKeys();
+                    ({ publicKey, privateKey } = keys);
                 } catch (err) {
                     console.error("Errore durante il caricamento delle chiavi:", err);
                     location.replace("/funcs/logout.php");
