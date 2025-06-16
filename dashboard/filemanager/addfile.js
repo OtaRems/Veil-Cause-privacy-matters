@@ -107,22 +107,22 @@ function bindFileEvents() {
       formData.append("group", $("#realfileselect").val());
 
       // Send the data using AJAX
-  $.ajax({
-    url: "filemanager/logic.php",
-    method: "POST",
-    data: formData,
-    processData: false, // Don't process data as a query string
-    contentType: false, // Don't set content-type header, let FormData handle it
-    success: function(response) {
-      console.log("File encrypted and uploaded successfully!");
-      // Handle the success response if needed
-    },
-    error: function(xhr, status, error) {
-      console.error("Upload failed:", error);
-      let text = `<b>Errore:</b> C'è stato un errore durante il caricamento del file!`;
-      addAlert("danger", text, alertId);
-    }
-  });
+      $.ajax({
+        url: "filemanager/logic.php",
+        method: "POST",
+        data: formData,
+        processData: false, // Don't process data as a query string
+        contentType: false, // Don't set content-type header, let FormData handle it
+        success: function(response) {
+          console.log("File encrypted and uploaded successfully!");
+          // Handle the success response if needed
+        },
+        error: function(xhr, status, error) {
+          console.error("Upload failed:", error);
+          let text = `<b>Errore:</b> C'è stato un errore durante il caricamento del file!`;
+          addAlert("danger", text, alertId);
+        }
+      });
 
 
       //ritorno alla lista di file quando si finisce di caricare

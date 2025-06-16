@@ -8,7 +8,6 @@
     <script src="/funcs/js/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <script src="/funcs/js/bootstrap.bundle.min.js"></script>
-    <script src="/funcs/js/app.js"></script>
     <script src="/funcs/js/keyderiv.js"></script>
     <script src="/funcs/js/alert.js"></script>
     <link rel="stylesheet" href="/css/style.css">
@@ -19,10 +18,16 @@
     ?>
     <script>
         var alertnum = 0
-        let key
+        var pubkey, privkey
         $( async () => {
             if (keyManager.hasKey()) {
-                key = await keyManager.loadKey();
+                try {
+                    const keys = await keyManager.loadAndImportKeys();
+                    ({ publicKey, privateKey } = keys);
+                } catch (err) {
+                    console.error("Errore durante il caricamento delle chiavi:", err);
+                    location.replace("/funcs/logout.php");
+                }
             }else {
                 location.replace("/funcs/logout.php")
             }   
@@ -30,7 +35,13 @@
             $("#logoutbtn").on("click",function() {
                 location.replace("/funcs/logout.php");
             })
+
+                let response = await fetch("https://api.adviceslip.com/advice");
+                let adviceData = await response.json();
+                let advice = adviceData.slip.advice;
+                $("#advtext").html(advice)
         })
+
     </script>
 </head>
 <body class="d-flex flex-column" style="min-height: 100vh;">
@@ -42,6 +53,7 @@
         ?>
     </b>
     <button class="btn btn-outline-secondary btn-sm ms-2" id="logoutbtn">Logout</button>
+    <b class="text-end position-absolute end-0 me-5 text-secondary h5 bottom-0" id="advtext"></b>
     </h2>
 
     <!-- Container with grid rows taking full remaining height -->

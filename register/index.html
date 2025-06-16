@@ -8,7 +8,7 @@
     <script src="/funcs/js/jquery-3.7.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <script src="/funcs/js/bootstrap.bundle.min.js"></script>
-    <script src="/funcs/js/app.js"></script>
+    <script src="/funcs/js/keyderiv.js"></script>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon">
 </head>
@@ -21,12 +21,13 @@
             <div class="col-5 h-100 p-3">
             <div class="evidbg text-center rounded-2 w-100 h-100 p-5 align-content-center">
                     <p class="mt-4 h2"><strong>
-                        "La tua privacy non dovrebbe essere un lusso, ma una <span class="text-danger">certezza</span>."
+                        "La tua privacy non dovrebbe essere un lusso, ma una <span class="accenttext">certezza</span>."
                     </strong></p>
                 </div>
             </div>
             <!--Colonna di destra-->
-            <div id="mainbox" class="col-7 h-100 p-5 text-center">
+            <div id="mainbox" class="col-7 h-100 p-5 text-center position-relative">
+                <a href="/index.html" id="backbutton" class="btn btn-outline-secondary btn-sm rounded-circle position-absolute top-0 end-0 mt-4 me-4">🡨</a>
                 <form class="mx-5 needs-validation" novalidate>
                     <img src="../img/Logogreen.png" alt="Logo" style="width:3rem">
                     <h1>Benvenuto in Veil!</h1>
@@ -79,44 +80,93 @@
         })
 
         //submit del form
-        $("form").on("submit", function(event) {
-            event.preventDefault();
-            //controllo sugli input tramite regexp
-            if (!this.checkValidity()) {
-                    event.stopPropagation();
-                }
-                else {
-                    let user = $("#UserInput").val()
-                    let pass = $("#PasswordInput").val()
-                    $("#bottom-text").html('<div class="spinner-border spinner-border-sm text-success" role="status"></div><span> Caricamento..</span>')
-                    //primo hash della password, lato client con l'algoritmo Argon2iD
-                    let salt = Argon2id.randomSalt();
-                    setTimeout( function() {
-                        Argon2id.hash(pass, salt, 3, 4000, 1, 32).then(argon => {
-                            
-                        //invio di user + hash + salt al server
-                        $.ajax({
-                        url: "register.php",
-                        method: "POST",
-                        data:  {username:user, pass: argon, salt: salt},
-                        success: function (result) {
-                            if (result == "0") {
-                                $("#mainbox").addClass("align-content-center")
-                                $("#mainbox").html('<h3>Il tuo account è stato creato con successo!</h3><p>Ora puoi effettuare il login tramite la pagina apposita</p><a  class="btn btn-primary px-5 mt-3" href="../login/">Login</a>');
-                            } else {
-                                $("#UserInput").val("")
-                                $("#userfeed").html("Esiste già un utente con questo username!")
-                                $("#bottom-text").html('<a class="form-text" href="../login/">Hai già un account? Accedi qui</a>')
-                            }
-                        }
-                        });
-                    });
-                    }, 50)
-                    
-                }
-
+        $("form").on("submit", async function (event) {
+          event.preventDefault();
+                
+          if (!this.checkValidity()) {
+            event.stopPropagation();
             $(this).addClass("was-validated");
-        })
+            return;
+          }
+        
+          const user = $("#UserInput").val();
+          const pass = $("#PasswordInput").val();
+        
+          $("#bottom-text").html(
+            '<div class="spinner-border spinner-border-sm text-success" role="status"></div><span> Caricamento...</span>'
+          );
+        
+          try {
+            // Salting e hashing con Argon2id
+            const salt = Argon2id.randomSalt();
+            const argon = await Argon2id.hash(pass, salt, 3, 4000, 1, 32);
+        
+            // Derivazione AES key
+            const aesKey = await keyManager.deriveAesKey(pass, salt);
+        
+            // Generazione coppia di chiavi RSA
+            const keyPair = await crypto.subtle.generateKey(
+              {
+                name: "RSA-OAEP",
+                modulusLength: 4096,
+                publicExponent: new Uint8Array([1, 0, 1]),
+                hash: "SHA-256",
+              },
+              true,
+              ["encrypt", "decrypt"]
+            );
+            
+            // Esportazione chiavi
+            const exportedPublicKey = await crypto.subtle.exportKey("spki", keyPair.publicKey);
+            const exportedPrivateKey = await crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
+            
+            // IV + cifratura della chiave privata con AES-GCM
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const encryptedPrivateKey = await crypto.subtle.encrypt(
+              { name: "AES-GCM", iv: iv },
+              aesKey,
+              exportedPrivateKey
+            );
+            
+            // Codifica Base64 sicura
+            const b64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+            const publicKeyB64 = b64(exportedPublicKey);
+            const encryptedPrivKeyB64 = b64(encryptedPrivateKey);
+            const ivB64 = b64(iv);
+            
+            // Invio unico al server (inserimento completo)
+            $.ajax({
+              url: "register.php",
+              method: "POST",
+              data: {
+                username: user,
+                pass: argon,
+                salt: salt,
+                pubkey: publicKeyB64,
+                privkey: encryptedPrivKeyB64,
+                iv: ivB64,
+              },
+              success: function (result) {
+                if (result === "0") {
+                  $("#mainbox").addClass("align-content-center").html(`
+                    <h3>Il tuo account è stato creato con successo!</h3>
+                    <p>Ora puoi effettuare il login tramite la pagina apposita.</p>
+                    <a class="btn btn-primary px-5 mt-3" href="../login/">Login</a>
+                  `);
+                } else {
+                  $("#UserInput").val("");
+                  $("#userfeed").html("Esiste già un utente con questo username!");
+                  $("#bottom-text").html('<a class="form-text" href="../login/">Hai già un account? Accedi qui</a>');
+                }
+              },
+            });
+          } catch (err) {
+            console.error("Errore nella registrazione:", err);
+            $("#bottom-text").html('<span class="text-danger">Errore interno</span>');
+          }
+        
+          $(this).addClass("was-validated");
+        });
 
         //Validazione password
         let pinput = $("#PasswordInput")

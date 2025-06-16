@@ -21,7 +21,7 @@ if (isset($_POST["username"])) {
         $hashClient = $_POST["hashpass"];
         $hashFinale = hash("sha256", $hashClient, false);
 
-        $stmt = $conn->prepare("SELECT UID, passhash FROM utenti WHERE username = ?");
+        $stmt = $conn->prepare("SELECT UID, passhash, PublicKey, PrivateKey, iv FROM utenti WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $risultato = $stmt->get_result();
@@ -29,19 +29,24 @@ if (isset($_POST["username"])) {
         if ($risultato->num_rows > 0) {
             $dati = $risultato->fetch_assoc();
             if (hash_equals($dati["passhash"], $hashFinale)) {
-                // Login riuscito, rigeneriamo ID di sessione
                 session_regenerate_id(true);
-                $_SESSION["username"] = $username; // inizializza username
-                $_SESSION["uid"] = $dati["UID"]; // inizializza username
-                $_SESSION["last_activity"] = time(); // inizializza il timer inattività
-                echo "LOGIN_OK";
+                $_SESSION["username"] = $username;
+                $_SESSION["uid"] = $dati["UID"];
+                $_SESSION["last_activity"] = time();
+
+                // Risposta JSON con chiavi
+                echo json_encode([
+                    "status" => "LOGIN_OK",
+                    "pubkey" => $dati["PublicKey"],
+                    "privkey" => $dati["PrivateKey"],
+                    "iv" => $dati["iv"]
+                ]);
             } else {
                 echo "LOGIN_FAILED";
             }
         } else {
             echo "USER_NOT_FOUND";
         }
-
     } else {
         // PRIMA RICHIESTA - Invio del salt
         $patternUsername = "/^[A-Za-z][A-Za-z0-9]{0,19}$/";

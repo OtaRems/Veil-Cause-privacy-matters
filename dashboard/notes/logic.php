@@ -8,33 +8,34 @@
 
     //se vogliamo inserire una nota
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["request"] == "add") {
-
         $titolo = $_POST["title"];
         $testo = $_POST["text"];
         $group = (int) $_POST["group"];
         $iv = $_POST["iv"];
+        $encryptedKey = $_POST["encryptedKey"];
         $lastedited = date('Y-m-d H:i:s');
-
-        $smtp = $conn->prepare("INSERT INTO note(titolo, testo, gruppo, iv, userID, lastEdited) VALUES (?,?,?,?,?,?)");
-        $smtp->bind_param("ssisis", $titolo, $testo,$group, $iv,$userid, $lastedited);
+    
+        $smtp = $conn->prepare("INSERT INTO note (titolo, testo, gruppo, iv, notekey, userID, lastEdited) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $smtp->bind_param("ssissis", $titolo, $testo, $group, $iv, $encryptedKey, $userid, $lastedited);
         $smtp->execute();
         echo "STATUS: OK";
-
-    //se vogliamo modificare una nota
+    
     } else if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["request"] == "edit") {
         $idnota = $_POST["id"];
         $titolo = $_POST["title"];
         $testo = $_POST["text"];
         $group = (int) $_POST["group"];
         $iv = $_POST["iv"];
+        $encryptedKey = $_POST["encryptedKey"];
         $lastedited = date('Y-m-d H:i:s');
-
-        $smtp = $conn->prepare("UPDATE note SET titolo = ?, testo = ?, gruppo = ?, iv = ?, lastEdited = ? WHERE IDNota = ?");
-        $smtp->bind_param("ssissi", $titolo, $testo,$group, $iv, $lastedited, $idnota);
+    
+        $smtp = $conn->prepare("UPDATE note SET titolo = ?, testo = ?, gruppo = ?, iv = ?, notekey = ?, lastEdited = ? WHERE IDNota = ?");
+        $smtp->bind_param("ssisssi", $titolo, $testo, $group, $iv, $encryptedKey, $lastedited, $idnota);
+    
         if ($smtp->execute())
             echo "STATUS: OK";
         else
-            echo "STATUS: NOT OK";
+            echo "STATUS: NOT OK";    
     
     //se vogliamo eliminare una nota
     } else if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST["request"] == "delete") {
@@ -51,7 +52,7 @@
     } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         header('Content-Type: application/json');
 
-        $sql = "SELECT IDNota, titolo, testo, gruppo, iv, lastEdited FROM note WHERE userID = ? ORDER BY lastEdited desc";
+        $sql = "SELECT IDNota, titolo, testo, gruppo, iv, lastEdited, notekey FROM note WHERE userID = ? ORDER BY lastEdited desc";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $userid);
         $stmt->execute();
